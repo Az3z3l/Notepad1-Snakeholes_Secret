@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <title>
+            The Playbook
+        </title>
+    </head>
+    <body onload="init()">
+        <center>
+            <h2>The PlayBook</h2>
+            Add your idea
+        </center>
+
+            <br />
+            <i>
+                <div id="my-stuff">
+
+                </div>
+            </i>
+            <br />
+        <center>
+            <textarea id="play-dev" rows="7" cols="200">
+
+            </textarea>
+            <br />
+            <button type="button" onclick="addPlay()" spellcheck="true">Add Play</button>
+        </center>
+
+
+
+        <script>
+            async function addPlay() {
+                x=document.getElementById("play-dev").value.trim()
+                console.log(x)
+                const response = await fetch("/add_notes", {
+                    method: 'POST', 
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: `content=${x}`
+                });
+                z = await (response.text());
+                console.log(z)
+                changePlay(x)
+            }
+
+            function changePlay(play){
+                let ele = document.getElementById('my-stuff');
+                ele.innerHTML = play+"<br />~you";
+                document.getElementById("play-dev").value = ""
+            }
+
+            async function init(){
+                const response = await fetch("/get_notes", {
+                    method: 'GET', 
+                });
+                z = await (response.text());
+                console.log(z)
+                changePlay(z)
+            }
+
+        </script>
+    </body>
+</html>
+
+<!-- 
+    still in beta phase
+    Todo:
+        Add login func 
+        Allow more plays for users
+        Directly share plays
+        Add frontend for Finder API 
+-->
