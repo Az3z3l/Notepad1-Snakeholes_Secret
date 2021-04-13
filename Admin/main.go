@@ -15,6 +15,9 @@ import (
 	"github.com/gorilla/mux"
 )
 
+const adminID = "vfYZ35mry2cVqOPNo1xnL1HE0VW5tp7oMX"
+const adminNOTE = "inctf{dary_l3g3nd4ry_23839732445567356721110}"
+
 var Notes = make(map[string]string)
 
 // Set these for all responses
@@ -28,7 +31,7 @@ var SafetyHeaders = map[string]string{
 // Set these specifically to prevent XSS on viewing notes.. Doesn't hurt to take extra precaution ¬‿¬
 var XssPreventers = map[string]string{
 	"Content-Type":            "text/plain",
-	"content-security-policy": "script-src 'strict-dynamic';object-src 'none';base-uri 'none';require-trusted-types-for 'script';default-src 'self';",
+	"content-security-policy": "script-src 'strict-dynamic';object-src 'none';base-uri 'none';require-trusted-types-for 'script';default-src 'self';frame-ancestors 'self'",
 }
 
 func cookGenerator() string {
@@ -62,16 +65,18 @@ func getIDFromCooke(r *http.Request, w http.ResponseWriter) string {
 	return cookeval
 }
 
-func noteAdder(w http.ResponseWriter, r *http.Request) {
+func add(w http.ResponseWriter, r *http.Request) {
 	headerSetter(w, SafetyHeaders)
 	id := getIDFromCooke(r, w)
-	r.ParseForm()
-	noteConte := r.Form.Get("content")
-	Notes[id] = noteConte
+	if id != adminID {
+		r.ParseForm()
+		noteConte := r.Form.Get("content")
+		Notes[id] = noteConte
+	}
 	fmt.Fprintf(w, "OK")
 }
 
-func noteGetter(w http.ResponseWriter, r *http.Request) {
+func get(w http.ResponseWriter, r *http.Request) {
 	headerSetter(w, SafetyHeaders)
 	id := getIDFromCooke(r, w)
 	x := Notes[id]
@@ -83,7 +88,7 @@ func noteGetter(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func noteRegex(w http.ResponseWriter, r *http.Request) {
+func find(w http.ResponseWriter, r *http.Request) {
 
 	headerSetter(w, SafetyHeaders)
 	id := getIDFromCooke(r, w)
@@ -153,18 +158,26 @@ func test(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Reset notes every 30 mins
+func resetNotes() {
+	Notes[adminID] = adminNOTE
+	for range time.Tick(time.Second * 1 * 60 * 30) {
+		Notes = make(map[string]string)
+		Notes[adminID] = adminNOTE
+	}
+}
+
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
-	// serve index.html
 	var dir string
 	flag.StringVar(&dir, "dir", "./public", "the directory to serve files from. Defaults to the current dir")
 	flag.Parse()
-
+	go resetNotes()
 	r := mux.NewRouter()
-	r.HandleFunc("/add_notes", noteAdder).Methods("POST")
-	r.HandleFunc("/get_notes", noteGetter).Methods("GET")
-	r.HandleFunc("/find_notes", noteRegex).Methods("GET")
+	r.HandleFunc("/add", add).Methods("POST")
+	r.HandleFunc("/get", get).Methods("GET")
+	r.HandleFunc("/find", find).Methods("GET")
 	r.HandleFunc("/test", test)
 	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir(dir))))
 	fmt.Println("Server started at http://0.0.0.0:3000")
