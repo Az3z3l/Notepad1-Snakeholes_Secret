@@ -33,7 +33,7 @@
             async function addPlay() {
                 x=document.getElementById("play-dev").value.trim()
                 console.log(x)
-                const response = await fetch("/add_notes", {
+                const response = await fetch("/add", {
                     method: 'POST', 
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded",
@@ -52,7 +52,7 @@
             }
 
             async function init(){
-                const response = await fetch("/get_notes", {
+                const response = await fetch("/get", {
                     method: 'GET', 
                 });
                 z = await (response.text());
