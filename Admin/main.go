@@ -16,7 +16,7 @@ import (
 )
 
 const adminID = "vfYZ35mry2cVqOPNo1xnL1HE0VW5tp7oMX"
-const adminNOTE = "inctf{dary_l3g3nd4ry_23839732445567356721110}"
+const adminNOTE = "inctf{theres_a_part_2_6552637428346}"
 
 var Notes = make(map[string]string)
 
@@ -71,7 +71,9 @@ func add(w http.ResponseWriter, r *http.Request) {
 	if id != adminID {
 		r.ParseForm()
 		noteConte := r.Form.Get("content")
-		Notes[id] = noteConte
+		if len(noteConte) < 75 {
+			Notes[id] = noteConte
+		}
 	}
 	fmt.Fprintf(w, "OK")
 }
@@ -147,17 +149,6 @@ func find(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, responseee)
 }
 
-func test(w http.ResponseWriter, r *http.Request) {
-	headerSetter(w, SafetyHeaders)
-
-	param := r.URL.Query()
-	for k, v := range param {
-		for _, d := range v {
-			w.Header().Set(k, d)
-		}
-	}
-}
-
 // Reset notes every 30 mins
 func resetNotes() {
 	Notes[adminID] = adminNOTE
@@ -178,7 +169,6 @@ func main() {
 	r.HandleFunc("/add", add).Methods("POST")
 	r.HandleFunc("/get", get).Methods("GET")
 	r.HandleFunc("/find", find).Methods("GET")
-	r.HandleFunc("/test", test)
 	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir(dir))))
 	fmt.Println("Server started at http://0.0.0.0:3000")
 	srv := &http.Server{

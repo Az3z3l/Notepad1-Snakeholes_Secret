@@ -1,4 +1,4 @@
-module playbook-theIntro
+module notebook-1
 
 go 1.16
 

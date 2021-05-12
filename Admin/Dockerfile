@@ -1,6 +1,6 @@
 FROM golang:1.16.3
 
-ENV APP_NAME playbookIntro
+ENV APP_NAME notebook1
 
 COPY . /go/src/${APP_NAME}
 WORKDIR /go/src/${APP_NAME}
