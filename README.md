@@ -1,8 +1,8 @@
-Name  : Magic 2:The Turn
+Name  : Notepad
 
-Desc  : This is going to be Legend ... wait for it ...
+Desc  : {tbd}
 
-Flag  : inctf{dary_l3g3nd4ry_23839732445567356721110}
+Flag  : inctf{{tbd}}
 
 Deploy: 
 - docker build -t notepad1 . 
