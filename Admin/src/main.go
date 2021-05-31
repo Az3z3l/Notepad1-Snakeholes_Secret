@@ -15,23 +15,16 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const adminID = "vfYZ35mry2cVqOPNo1xnL1HE0VW5tp7oMX"
-const adminNOTE = "inctf{theres_a_part_2_6552637428346}"
+const adminID = "2WzBwij9Ii1yAnj2FQXtmjckDYiDVYPRpU"
+const adminNOTE = "inctf{youll_never_take_me_alive_ialmvwoawpwe}"
 
 var Notes = make(map[string]string)
 
-// Set these for all responses
-var SafetyHeaders = map[string]string{
-	"x-permitted-cross-domain-policies": "none",
-	"x-xss-protection":                  "1; mode=block",
-	"Cross-Origin-Opener-Policy":        "same-origin",
-	"x-content-type-options":            "nosniff",
-}
-
-// Set these specifically to prevent XSS on viewing notes.. Doesn't hurt to take extra precaution ¬‿¬
-var XssPreventers = map[string]string{
-	"Content-Type":            "text/plain",
-	"content-security-policy": "script-src 'strict-dynamic';object-src 'none';base-uri 'none';require-trusted-types-for 'script';default-src 'self';frame-ancestors 'self'",
+// Prevent XSS on api-endpoints ¬‿¬
+var cType = map[string]string{
+	"Content-Type":           "text/plain",
+	"x-content-type-options": "nosniff",
+	"X-Frame-Options":        "DENY",
 }
 
 func cookGenerator() string {
@@ -58,7 +51,7 @@ func getIDFromCooke(r *http.Request, w http.ResponseWriter) string {
 			Value:    cookeval,
 			SameSite: 2,
 			HttpOnly: true,
-			// Secure:   true,
+			Secure:   true,
 		}
 		http.SetCookie(w, &c)
 	}
@@ -66,7 +59,7 @@ func getIDFromCooke(r *http.Request, w http.ResponseWriter) string {
 }
 
 func add(w http.ResponseWriter, r *http.Request) {
-	headerSetter(w, SafetyHeaders)
+
 	id := getIDFromCooke(r, w)
 	if id != adminID {
 		r.ParseForm()
@@ -79,10 +72,9 @@ func add(w http.ResponseWriter, r *http.Request) {
 }
 
 func get(w http.ResponseWriter, r *http.Request) {
-	headerSetter(w, SafetyHeaders)
 	id := getIDFromCooke(r, w)
 	x := Notes[id]
-	headerSetter(w, XssPreventers)
+	headerSetter(w, cType)
 	if x == "" {
 		fmt.Fprintf(w, "404 No Note Found")
 	} else {
@@ -92,7 +84,6 @@ func get(w http.ResponseWriter, r *http.Request) {
 
 func find(w http.ResponseWriter, r *http.Request) {
 
-	headerSetter(w, SafetyHeaders)
 	id := getIDFromCooke(r, w)
 
 	param := r.URL.Query()
@@ -109,7 +100,7 @@ func find(w http.ResponseWriter, r *http.Request) {
 	var start bool
 	str, err = param["startsWith"]
 	if !err {
-		start = strings.HasPrefix(x, "legen")
+		start = strings.HasPrefix(x, "ken")
 	} else {
 		start = strings.HasPrefix(x, str[0])
 	}
@@ -117,7 +108,7 @@ func find(w http.ResponseWriter, r *http.Request) {
 	var end bool
 	str, err = param["endsWith"]
 	if !err {
-		end = strings.HasSuffix(x, "dary")
+		end = strings.HasSuffix(x, "adams")
 	} else {
 		end = strings.HasSuffix(x, str[0])
 	}
@@ -132,20 +123,17 @@ func find(w http.ResponseWriter, r *http.Request) {
 		responseee = x
 	} else {
 		_, present := param["debug"]
-		// Send back the startsWith, condition data as headers.
+
 		if present {
 			for k, v := range param {
-				fmt.Println(k)
-				fmt.Println(v)
 				for _, d := range v {
 					w.Header().Set(k, d)
 				}
 			}
 		}
-		fmt.Println("++++++++++++++")
 		responseee = "404 No Note Found"
 	}
-	headerSetter(w, XssPreventers)
+	headerSetter(w, cType)
 	fmt.Fprintf(w, responseee)
 }
 

@@ -1,8 +1,6 @@
-Name  : Notepad
+Name  : Notepad 1 - Snakehole's Secret
 
-Desc  : {tbd}
-
-Flag  : inctf{{tbd}}
+Desc  : Janet Snakehole, the rich aristocratic widow with a terrible secret, is being investigated by the FBI's number 1, Burt Tyrannosaurus Macklin. Burt found a website that she visits often. See if you can find anything.  
 
 Deploy: 
 - docker build -t notepad1 . 
