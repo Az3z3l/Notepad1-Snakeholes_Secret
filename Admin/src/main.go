@@ -100,7 +100,7 @@ func find(w http.ResponseWriter, r *http.Request) {
 	var start bool
 	str, err = param["startsWith"]
 	if !err {
-		start = strings.HasPrefix(x, "ken")
+		start = strings.HasPrefix(x, "snake")
 	} else {
 		start = strings.HasPrefix(x, str[0])
 	}
@@ -108,7 +108,7 @@ func find(w http.ResponseWriter, r *http.Request) {
 	var end bool
 	str, err = param["endsWith"]
 	if !err {
-		end = strings.HasSuffix(x, "adams")
+		end = strings.HasSuffix(x, "hole")
 	} else {
 		end = strings.HasSuffix(x, str[0])
 	}

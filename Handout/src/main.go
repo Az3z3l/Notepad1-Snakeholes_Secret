@@ -16,7 +16,7 @@ import (
 )
 
 const adminID = "7his15N07th30riG1N4L99999999999999"
-const adminNOTE = "inctf{this_is_not_the_flag}"
+const adminNOTE = "inctf{FLAG}"
 
 var Notes = make(map[string]string)
 
@@ -51,7 +51,7 @@ func getIDFromCooke(r *http.Request, w http.ResponseWriter) string {
 			Value:    cookeval,
 			SameSite: 2,
 			HttpOnly: true,
-			Secure:   true, // change to false if deploying locally
+			Secure:   true,
 		}
 		http.SetCookie(w, &c)
 	}
@@ -100,7 +100,7 @@ func find(w http.ResponseWriter, r *http.Request) {
 	var start bool
 	str, err = param["startsWith"]
 	if !err {
-		start = strings.HasPrefix(x, "ken")
+		start = strings.HasPrefix(x, "snake")
 	} else {
 		start = strings.HasPrefix(x, str[0])
 	}
@@ -108,7 +108,7 @@ func find(w http.ResponseWriter, r *http.Request) {
 	var end bool
 	str, err = param["endsWith"]
 	if !err {
-		end = strings.HasSuffix(x, "adams")
+		end = strings.HasSuffix(x, "hole")
 	} else {
 		end = strings.HasSuffix(x, str[0])
 	}

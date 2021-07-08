@@ -1,4 +1,4 @@
-module notebook-1
+module notepad-1
 
 go 1.16
 
