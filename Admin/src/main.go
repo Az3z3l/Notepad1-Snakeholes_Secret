@@ -22,9 +22,10 @@ var Notes = make(map[string]string)
 
 // Prevent XSS on api-endpoints ¬‿¬
 var cType = map[string]string{
-	"Content-Type":           "text/plain",
-	"x-content-type-options": "nosniff",
-	"X-Frame-Options":        "DENY",
+	"Content-Type":            "text/plain",
+	"x-content-type-options":  "nosniff",
+	"X-Frame-Options":         "DENY",
+	"Content-Security-Policy": "default-src 'none';",
 }
 
 func cookGenerator() string {
@@ -51,7 +52,7 @@ func getIDFromCooke(r *http.Request, w http.ResponseWriter) string {
 			Value:    cookeval,
 			SameSite: 2,
 			HttpOnly: true,
-			Secure:   true,
+			Secure:   false,
 		}
 		http.SetCookie(w, &c)
 	}
@@ -123,12 +124,21 @@ func find(w http.ResponseWriter, r *http.Request) {
 		responseee = x
 	} else {
 		_, present := param["debug"]
-
 		if present {
+			delete(param, "debug")
+			delete(param, "startsWith")
+			delete(param, "endsWith")
+			delete(param, "condition")
+
 			for k, v := range param {
 				for _, d := range v {
-					w.Header().Set(k, d)
+
+					if regexp.MustCompile("^[a-zA-Z0-9{}_;-]*$").MatchString(k) && len(d) < 50 {
+						w.Header().Set(k, d)
+					}
+					break
 				}
+				break
 			}
 		}
 		responseee = "404 No Note Found"
@@ -137,7 +147,7 @@ func find(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, responseee)
 }
 
-// Reset notes every 30 mins
+// Reset notes every 30 mins.  No Vuln in this
 func resetNotes() {
 	Notes[adminID] = adminNOTE
 	for range time.Tick(time.Second * 1 * 60 * 30) {

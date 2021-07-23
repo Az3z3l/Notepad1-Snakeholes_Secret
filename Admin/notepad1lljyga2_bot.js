@@ -1,3 +1,4 @@
+// Notepad1 - Snakehole's secret
 const puppeteer = require('puppeteer');
 var queue = require('../redis-controller/queue');
 const queueName = __filename.split(".")[0].split("/").pop();
@@ -7,10 +8,10 @@ const challName = "Notepad 1"
 const thecookie = {
     name: 'id',
     value: '2WzBwij9Ii1yAnj2FQXtmjckDYiDVYPRpU',
-    domain: '9db5fca7c60f.ngrok.io',
+    domain: 'chall.notepad1.gq',
     expires: -1,
     httpOnly: true,
-    secure: true,
+    secure: false,
     session: true,
     sameSite: 'Lax',
   }

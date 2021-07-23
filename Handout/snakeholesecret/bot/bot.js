@@ -1,13 +1,15 @@
+// Notepad1 - Snakehole's secret
 const puppeteer = require('puppeteer');
 
+const challName = "Notepad 1"
 
 const thecookie = {
     name: 'id',
-    value: '7his15N07th30riG1N4L99999999999999',
-    domain: 'localhost',
+    value: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    domain: 'chall.notepad1.gq',  
     expires: -1,
     httpOnly: true,
-    // secure: true,
+    secure: false,
     session: true,
     sameSite: 'Lax',
   }
@@ -17,6 +19,7 @@ const thecookie = {
 async function url_visit (url) {
     var quote;
     return new Promise(async function(resolve, reject) {
+        // start modification
         
         const browser = await puppeteer.launch();  // add `{ args: ['--no-sandbox'] }` if running as root
         const page = await browser.newPage();         
@@ -31,10 +34,9 @@ async function url_visit (url) {
         }        
         await browser.close();
 
+        // end modification
         resolve(quote);
     });
 }
 
-
-url = "<your url>"
 url_visit(url)

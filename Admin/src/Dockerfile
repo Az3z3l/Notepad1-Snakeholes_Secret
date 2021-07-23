@@ -1,6 +1,6 @@
-FROM golang:1.16.3
+FROM golang:1.16.6
 
-ENV APP_NAME notebook1
+ENV APP_NAME notepad1
 
 COPY . /go/src/${APP_NAME}
 WORKDIR /go/src/${APP_NAME}
