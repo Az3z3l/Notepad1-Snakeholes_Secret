@@ -6,10 +6,10 @@ Janet Snakehole, the rich aristocratic widow with a terrible secret, is being in
 
 
 ### Challenge File
-[Source](./Handout/snakeholesecret.zip)
+[Source](./Handout/snakeholessecret.zip)
 
 ### MD5 Hash: 
-`fc10f1d03e258b1e697a826541e5b2a1`
+`ff4b96d11c70af25c0175d5545b33fc2`
 
 
 ### Short Writeup
