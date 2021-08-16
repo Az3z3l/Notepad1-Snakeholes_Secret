@@ -26,10 +26,9 @@ async function url_visit (url) {
         const browser = await puppeteer.launch({executablePath: '/home/bot/latest/chrome'});  // add `{ args: ['--no-sandbox'] }` if running as root
         const page = await browser.newPage();         
         await page.setCookie(thecookie)
-        await page.setDefaultNavigationTimeout(1e3*15);  // Timeout duration in milliseconds    // use either this or wait for navigation
         try{
             var result = await page.goto(url);
-            await page.waitForNavigation(); // wait till the page finishes loading              
+            await page.waitForTimeout(1e3*10);// wait for 10 seconds before closing              
         }
         catch(e){
             console.log("timeout exceeded");
